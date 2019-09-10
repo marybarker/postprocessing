@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage{fullpage, amsmath}
+
+\begin{document}
+
+\section{Hybridization}
+Hybridization involves the weakening of Continuity 
+constraints at inter-element boundaries to allow for: 
+\begin{itemize}
+\item Larger solution space to achieve approximations in
+\item Decoupled systems (parallelizable)
+\item Local computations -- better stiffness matrices
+\item High order approximations through flux recovery
+\end{itemize}
+Some of the major hybridized methods are: 
+Primal Hybrid, 
+Dual/Mixed Hybrid, and 
+Lagrangian Discontinuous Galerkin Hybrid. 
+
+For a breakdown of many hybridized methods and a unified framework 
+for analyzing some of these, see (Cockburn 1985), 
+(Arnold, Brezzi, Cockburn, Marini 2001/2), (Cockburn et al. 2016). 
+In this work, we will focus on the Primal Hybrid formulation, with a 
+specific post-processing technique for improved accuracy. 
+
+The model problem for this study is $$-d^*du=f.$$ We will look at 
+2 and 3 dimension versions with $d^*d$ as div grad, grad div, and curl curl. 
+
+The primal formulation for this problem is derived as follows: 
+Solve $-d^*du=f$ weakly. i.e. $\langle-d^*du,v\rangle=\langle f,v\rangle$ 
+for all $v\in V$. This, in turn, can be written as a first-order system 
+using the weak form:
+$$
+\langle du,dv\rangle-\langle du, v\rangle_\partial=\langle f,v\rangle
+$$
+where the $\langle,\rangle_\partial$ denotes inner product on the 
+boundaries. The explicit formulation of this term comes from the 
+Divergence/Stokes/Green's theorem and depends
+on the dimension of the domain and on the derivative $d$. 
+
+\section{Postprocessing}
+With primal hybrid method, we end up with an approximate 
+solution $u_h\in V_h$ to the function $-d^*du=f$. 
+In most physically relevant problems, however, we are looking both for $u$ and for 
+$\sigma=-du$. 
+
+Now, rather than evaluating a numerical derivative of the 
+computed solution $u_h$ and leaving it at that, we post-process to achieve 
+a much higher order of accuracy solution $\sigma_h$ for $-du$. 
+
+There are many methods used for improving the approximation for $\sigma_h$ 
+using the information gained from solving for $u_h$. 
+See, e.g., (Chou, Kwak, and Kim, 2002). 
+The one that we are 
+considering here uses the trace values as well as computed values for $u_h$. 
+
+So, given the approximation $u_h$, we then solve the minimization problem:
+minimize the functional 
+$$J(\sigma)=\frac{1}{2}\left(||\sigma+du_h||^2+||d\sigma-f||^2\right)$$
+over all $\sigma\in\Sigma_h$ 
+subject to the constraints: 
+$$\begin{array}{rcl}
+	\langle du_h,dv\rangle_K+\langle v,\sigma\rangle_{\partial K}
+		&=&\langle f,v\rangle_K\\
+	\langle u,\tau\rangle_{\partial K}&=&0
+\end{array}~~\forall (v,\sigma)\in W_h\times\Sigma_h$$
+Here the equality is taken over each element $K\in T_h$, and 
+$W_h$ the approximation function space for $u$ has weakened continuity 
+constraints on the inter-element boundaries. This allows for a better 
+approximation for $\sigma$ while the boundary terms introduce lagrange 
+multipliers that insure that $u_h$ satisfies the equations.  
+
+\section{Lagrange Multipliers}
+Recall the basic idea of Lagrange Multipliers from Calculus: 
+to minimize $F(x)$ subject to the constraint $G(x) = H(x)$, 
+solve $\nabla F=\lambda\nabla G$ 
+
+In this case, we want to solve $\nabla J(\sigma)=0$ while enforcing 
+the original equation constraints on $\sigma$. 
+So we solve for $(\sigma_h, u_h)$: 
+$$\langle\nabla J(\sigma_h), \tau\rangle = 0~~\forall\tau\in\Sigma_h$$
+and at the same time:  
+$$
+\langle u_h,v\rangle-\langle v,\sigma_h\rangle_\partial=\langle f,v\rangle,~~~
+\langle u_h,\tau\rangle_\partial = 0
+$$
+
+
+\end{document}

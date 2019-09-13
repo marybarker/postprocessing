@@ -1,5 +1,8 @@
 \documentclass{article}
-\usepackage{fullpage, amsmath}
+\usepackage{fullpage, amsmath, hyperref}
+\usepackage[backend=bibtex]{biblatex}
+\hypersetup{colorlinks=True}
+\addbibresource{refs.bib}
 
 \begin{document}
 
@@ -15,17 +18,16 @@ constraints at inter-element boundaries to allow for:
 Some of the major hybridized methods are: 
 Primal Hybrid, 
 Dual/Mixed Hybrid, and 
-Lagrangian Discontinuous Galerkin Hybrid. 
-
+Lagrangian Discontinuous Galerkin Hybrid. The major differences being in 
+the form of the equation used and in the definition of flux terms 
+used to complement the discontinuous function spaces. 
 For a breakdown of many hybridized methods and a unified framework 
-for analyzing some of these, see (Cockburn 1985), 
-(Arnold, Brezzi, Cockburn, Marini 2001/2), (Cockburn et al. 2016). 
+for analyzing some of these, see \cite{abcm012,cgl16}. 
 In this work, we will focus on the Primal Hybrid formulation, with a 
 specific post-processing technique for improved accuracy. 
 
 The model problem for this study is $$-d^*du=f.$$ We will look at 
 2 and 3 dimension versions with $d^*d$ as div grad, grad div, and curl curl. 
-
 The primal formulation for this problem is derived as follows: 
 Solve $-d^*du=f$ weakly. i.e. $\langle-d^*du,v\rangle=\langle f,v\rangle$ 
 for all $v\in V$. This, in turn, can be written as a first-order system 
@@ -50,7 +52,7 @@ a much higher order of accuracy solution $\sigma_h$ for $-du$.
 
 There are many methods used for improving the approximation for $\sigma_h$ 
 using the information gained from solving for $u_h$. 
-See, e.g., (Chou, Kwak, and Kim, 2002). 
+See, e.g., \cite{ckk02}.
 The one that we are 
 considering here uses the trace values as well as computed values for $u_h$. 
 
@@ -86,4 +88,5 @@ $$
 $$
 
 
+\printbibliography
 \end{document}

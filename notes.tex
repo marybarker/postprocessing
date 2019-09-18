@@ -60,17 +60,19 @@ So, given the approximation $u_h$, we then solve the minimization problem:
 minimize the functional 
 $$J(\sigma)=\frac{1}{2}\left(||\sigma+du_h||^2+||d\sigma-f||^2\right)$$
 over all $\sigma\in\Sigma_h$ 
-subject to the constraints: 
-$$\begin{array}{rcl}
-	\langle du_h,dv\rangle_K+\langle v,\sigma\rangle_{\partial K}
-		&=&\langle f,v\rangle_K\\
-	\langle u,\tau\rangle_{\partial K}&=&0
-\end{array}~~\forall (v,\sigma)\in W_h\times\Sigma_h$$
-Here the equality is taken over each element $K\in T_h$, and 
-$W_h$ the approximation function space for $u$ has weakened continuity 
-constraints on the inter-element boundaries. This allows for a better 
-approximation for $\sigma$ while the boundary terms introduce lagrange 
-multipliers that insure that $u_h$ satisfies the equations.  
+subject to the constraint: $a(u_h,v_h)+b(v_h,\sigma)=\langle f,v_h\rangle$
+which, when we take the variation of the derivatives of 
+both equations w.r.t. $\sigma_h$ and combine, is to solve: 
+$$\begin{array}{rclr}
+	\langle\sigma_h+u_h',\tau\rangle+\langle\sigma_h'-f,\tau'\rangle&=&
+	-b(\lambda_h,\tau)&forall\tau\\
+	a(u_h,v_h)+b(v_h,\sigma_h)&=&\langle f,v_h\rangle&\forall v_h
+\end{array}$$
+%Here the equality is taken over each element $K\in T_h$, and 
+%$W_h$ the approximation function space for $u$ has weakened continuity 
+%constraints on the inter-element boundaries. This allows for a better 
+%approximation for $\sigma$ while the boundary terms introduce lagrange 
+%multipliers that insure that $u_h$ satisfies the equations.  
 
 \section{Lagrange Multipliers}
 Recall the basic idea of Lagrange Multipliers from Calculus: 

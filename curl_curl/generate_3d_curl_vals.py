@@ -1,5 +1,5 @@
 from sympy import sin,cos
-from sympy.physics.vector import ReferenceFrame, curl
+from sympy.physics.vector import ReferenceFrame, curl, divergence
 R = ReferenceFrame('R')
 
 '''
@@ -17,3 +17,5 @@ print('\nV = ', v)
 print('\ncurl V = ', curl(v, R))
 w = curl(v, R)
 print('\ncurl curl V = ', curl(w, R), '\n')
+print('\n div curl V = ', divergence(curl(v,R),R))
+print('\n div V = ', divergence(v,R))

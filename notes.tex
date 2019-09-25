@@ -4,6 +4,7 @@
 \hypersetup{colorlinks=True}
 \addbibresource{refs.bib}
 
+\newcommand{\pp}[2]{\frac{\partial #1}{\partial #2}}
 \begin{document}
 
 \section{Hybridization}
@@ -65,7 +66,7 @@ which, when we take the variation of the derivatives of
 both equations w.r.t. $\sigma_h$ and combine, is to solve: 
 $$\begin{array}{rclr}
 	\langle\sigma_h+u_h',\tau\rangle+\langle\sigma_h'-f,\tau'\rangle&=&
-	-b(\lambda_h,\tau)&forall\tau\\
+	-b(\lambda_h,\tau)&\forall\tau\\
 	a(u_h,v_h)+b(v_h,\sigma_h)&=&\langle f,v_h\rangle&\forall v_h
 \end{array}$$
 %Here the equality is taken over each element $K\in T_h$, and 
@@ -79,16 +80,75 @@ Recall the basic idea of Lagrange Multipliers from Calculus:
 to minimize $F(x)$ subject to the constraint $G(x) = H(x)$, 
 solve $\nabla F=\lambda\nabla G$ 
 
-In this case, we want to solve $\nabla J(\sigma)=0$ while enforcing 
-the original equation constraints on $\sigma$. 
+In this case, we want to solve $\nabla J(\sigma)=\lambda\nabla b(\sigma,v)$ 
+while enforcing the original equation constraints on $\sigma$. 
 So we solve for $(\sigma_h, u_h)$: 
-$$\langle\nabla J(\sigma_h), \tau\rangle = 0~~\forall\tau\in\Sigma_h$$
+$$\langle\nabla J(\sigma_h),\tau\rangle=\lambda\nabla b(\sigma,v)~~
+\forall\tau\in\Sigma_h$$
 and at the same time:  
 $$
 \langle u_h,v\rangle-\langle v,\sigma_h\rangle_\partial=\langle f,v\rangle,~~~
 \langle u_h,\tau\rangle_\partial = 0
 $$
 
+\section{grad div}
+\subsection{2D}
+\subsection{3D}
+
+\section{div grad}
+The div grad problem does not produce the same superconvergence as 
+the grad div problem. 
+
+\section{curl curl}
+The form for the curl curl problem is: find $u\in V$ satisfying 
+$$\nabla\times(\nabla\times u) = f~~\text{ on }\Omega$$
+The primal form is then find $u$ satisfying: 
+$$\int_\Omega(\nabla\times u)\cdot(\nabla\times v)=\int_\Omega f\cdot v
+~~\forall v\in V$$
+Note that in most cases, curl curl can be problematic, as the nullspace 
+for curl contains $H(div)$, but if we choose our solution and source 
+term to be divergence free, this causes no issue. 
+
+\subsection{2D}
+Although curl is technically defined only for 3D, we can interpret 
+the 2D version as a 3D problem restricted to a plane. In that case, 
+we interpret $\nabla\times u=\left(\pp{u_y}{x}-\pp{u_x}{y}\right)\hat{k}$ 
+as a scalar although it is in fact a vector in the normal direction to the 
+plane. 
+
+In this case, we solve the equation: 
+$$\int_\Omega(\nabla\times u_h)\cdot(\nabla\times v_h)=
+\int_\Omega f\cdot v_h~~\forall v_h\in V_h$$ where $V_h$ is now 
+considered as continuous vector-valued 2D functions on the discretized 
+domain, with natural boundary conditions. 
+
+To post-process, we weaken the continuity constraint on $u_h$, 
+which means we have discontinuous vector-valued functions 
+for $V_h$, and continuous scalar functions for $\sigma=\nabla\times u$. 
+Thus the constrained optimization becomes: \\
+minimize $$\frac{1}{2}\left(||\sigma-\nabla\times u_h||^2
++||\nabla\times\sigma-f||^2\right)$$
+subject to the constraint: 
+$$\begin{array}{rcl}
+\int_\Omega(\nabla\times u_h)\cdot(\nabla\times v) - 
+\int_{\partial\Omega}v\times(\sigma\cdot n)&=&\int_\Omega f\cdot v\\
+\int_{\partial\Omega}u\times(\tau\cdot n)&=&0
+\end{array}$$
+Note that this actually gives the rotated version of the 2D 
+grad div problem. This is verified in the curl\_curl
+\subsection{3D}
+In 3D, the primal form for solving for $u_h$ is unchanged from 
+2D. However, when it comes to post-processing, we now have to use 
+the vector curl identity $$(\nabla\times\nabla\times u)\cdot v=
+\nabla\times u\cdot\nabla\times v + \nabla\cdot(v\times\nabla\times u)$$
+Note that, unlike the other weak forms, this integration-by-parts 
+identity does not give a boundary term. 
+
+Then to post-process, we minimize the usual functional $J(\sigma)$ 
+subject to the constraint: 
+$$\int_\Omega(\nabla\times u_h)\cdot(\nabla\times v)-
+\div(v\times\sigma + u\times\tau)=\int_\Omega f\cdot v$$
+This does not give superconvergence. 
 
 \printbibliography
 \end{document}
